@@ -1,3 +1,40 @@
+const music = new Audio("music.mp3");
+const moveSound = new Audio("move.mp3");
+const rotateSound = new Audio("rotate.mp3");
+const lineSound = new Audio("line.mp3");
+const gameOverSound = new Audio("gameover.mp3");
+
+music.loop = true;
+music.volume = 0.25;
+
+moveSound.volume = 0.4;
+rotateSound.volume = 0.4;
+lineSound.volume = 0.6;
+gameOverSound.volume = 0.7;
+
+let soundOn = false;
+
+const soundBtn = document.getElementById("soundBtn");
+
+function playSound(sound) {
+  if (!soundOn) return;
+
+  sound.currentTime = 0;
+  sound.play();
+}
+
+soundBtn.addEventListener("click", () => {
+  soundOn = !soundOn;
+
+  if (soundOn) {
+    music.play();
+    soundBtn.textContent = "Sound AUS";
+  } else {
+    music.pause();
+    soundBtn.textContent = "Sound AN";
+  }
+});
+
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
@@ -205,6 +242,8 @@ function rotatePiece() {
 
   if (!collision(currentPiece, 0, 0, rotated)) {
     currentPiece.shape = rotated;
+
+    playSound(rotateSound);
   }
 }
 
@@ -213,6 +252,8 @@ function movePiece(direction) {
 
   if (!collision(currentPiece, direction, 0)) {
     currentPiece.x += direction;
+    
+    playSound(moveSound);
   }
 }
 
@@ -243,6 +284,7 @@ function clearLines() {
   }
 
   if (cleared > 0) {
+    playSound(lineSound);
     lines += cleared;
 
     const points = [0, 100, 300, 500, 800];
@@ -266,6 +308,7 @@ function spawnPiece() {
 
   if (collision(currentPiece)) {
     gameOver = true;
+    playSound(gameOverSound);
     saveHighscore();
   }
 }
