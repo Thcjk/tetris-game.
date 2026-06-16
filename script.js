@@ -1,4 +1,9 @@
 const music = new Audio("music.mp3");
+
+music.loop = true;
+music.volume = 0.25;
+
+let musicOn = false;
 const moveSound = new Audio("move.mp3");
 const rotateSound = new Audio("rotate.mp3");
 const lineSound = new Audio("line.mp3");
@@ -48,6 +53,7 @@ const highscoreEl = document.getElementById("highscore");
 
 const pauseBtn = document.getElementById("pauseBtn");
 const restartBtn = document.getElementById("restartBtn");
+const soundBtn = document.getElementById("soundBtn");
 
 const COLS = 10;
 const ROWS = 20;
@@ -422,6 +428,19 @@ document.addEventListener("keydown", (event) => {
 
 pauseBtn.addEventListener("click", togglePause);
 restartBtn.addEventListener("click", restartGame);
+soundBtn.addEventListener("click", () => {
+
+  musicOn = !musicOn;
+
+  if (musicOn) {
+    music.play();
+    soundBtn.textContent = "Musik AUS";
+  } else {
+    music.pause();
+    soundBtn.textContent = "Musik AN";
+  }
+
+});
 
 restartGame();
 gameLoop();
