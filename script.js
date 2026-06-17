@@ -477,7 +477,16 @@ function draw() {
   }
 
   if (gameOver) {
-  drawOverlay("GAME OVER - R drücken");
+  drawOverlay("GAME OVER");
+  
+  ctx.fillStyle = "white";
+  ctx.font = "18px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(
+    "R drücken für Neustart",
+    canvas.width / 2,
+    canvas.height / 2 + 45
+  );
   }
 }
 
