@@ -1,45 +1,3 @@
-const music = new Audio("music.mp3");
-
-music.loop = true;
-music.volume = 0.25;
-
-let musicOn = false;
-const moveSound = new Audio("move.mp3");
-const rotateSound = new Audio("rotate.mp3");
-const lineSound = new Audio("line.mp3");
-const gameOverSound = new Audio("gameover.mp3");
-
-music.loop = true;
-music.volume = 0.25;
-
-moveSound.volume = 0.4;
-rotateSound.volume = 0.4;
-lineSound.volume = 0.6;
-gameOverSound.volume = 0.7;
-
-let soundOn = false;
-
-const soundBtn = document.getElementById("soundBtn");
-
-function playSound(sound) {
-  if (!soundOn) return;
-
-  sound.currentTime = 0;
-  sound.play();
-}
-
-soundBtn.addEventListener("click", () => {
-  soundOn = !soundOn;
-
-  if (soundOn) {
-    music.play();
-    soundBtn.textContent = "Sound AUS";
-  } else {
-    music.pause();
-    soundBtn.textContent = "Sound AN";
-  }
-});
-
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
@@ -53,6 +11,43 @@ const highscoreEl = document.getElementById("highscore");
 
 const pauseBtn = document.getElementById("pauseBtn");
 const restartBtn = document.getElementById("restartBtn");
+const soundBtn = document.getElementById("soundBtn");
+
+// Sounds
+const music = new Audio("music.mp3");
+const moveSound = new Audio("move.mp3");
+const rotateSound = new Audio("rotate.mp3");
+const lineSound = new Audio("line.mp3");
+const gameOverSound = new Audio("gameover.mp3");
+
+music.loop = true;
+music.volume = 0.25;
+
+moveSound.volume = 0.25;
+rotateSound.volume = 0.4;
+lineSound.volume = 0.6;
+gameOverSound.volume = 0.7;
+
+let soundOn = false;
+
+function playSound(sound) {
+  if (!soundOn) return;
+
+  sound.currentTime = 0;
+  sound.play().catch(() => {});
+}
+
+soundBtn.addEventListener("click", () => {
+  soundOn = !soundOn;
+
+  if (soundOn) {
+    music.play().catch(() => {});
+    soundBtn.textContent = "Sound AUS";
+  } else {
+    music.pause();
+    soundBtn.textContent = "Sound AN";
+  }
+});
 
 const COLS = 10;
 const ROWS = 20;
@@ -132,7 +127,7 @@ function randomPiece() {
 
   return {
     name,
-    shape: SHAPES[name],
+    shape: SHAPES[name].map(row => [...row]),
     color: COLORS[name],
     x: Math.floor(COLS / 2) - 2,
     y: 0
@@ -197,13 +192,8 @@ function collision(piece, offsetX = 0, offsetY = 0, shape = piece.shape) {
       const newX = piece.x + x + offsetX;
       const newY = piece.y + y + offsetY;
 
-      if (newX < 0 || newX >= COLS || newY >= ROWS) {
-        return true;
-      }
-
-      if (newY >= 0 && board[newY][newX]) {
-        return true;
-      }
+      if (newX < 0 || newX >= COLS || newY >= ROWS) return true;
+      if (newY >= 0 && board[newY][newX]) return true;
     }
   }
 
@@ -247,7 +237,6 @@ function rotatePiece() {
 
   if (!collision(currentPiece, 0, 0, rotated)) {
     currentPiece.shape = rotated;
-
     playSound(rotateSound);
   }
 }
@@ -257,7 +246,6 @@ function movePiece(direction) {
 
   if (!collision(currentPiece, direction, 0)) {
     currentPiece.x += direction;
-    
     playSound(moveSound);
   }
 }
@@ -290,6 +278,7 @@ function clearLines() {
 
   if (cleared > 0) {
     playSound(lineSound);
+
     lines += cleared;
 
     const points = [0, 100, 300, 500, 800];
@@ -314,6 +303,7 @@ function spawnPiece() {
   if (collision(currentPiece)) {
     gameOver = true;
     playSound(gameOverSound);
+    music.pause();
     saveHighscore();
   }
 }
@@ -352,6 +342,11 @@ function restartGame() {
   paused = false;
 
   pauseBtn.textContent = "Pause";
+
+  if (soundOn) {
+    music.currentTime = 0;
+    music.play().catch(() => {});
+  }
 
   currentPiece = randomPiece();
   nextPiece = randomPiece();
@@ -400,46 +395,16 @@ function gameLoop(time = 0) {
 }
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "ArrowLeft") {
-    movePiece(-1);
-  }
-
-  if (event.key === "ArrowRight") {
-    movePiece(1);
-  }
-
-  if (event.key === "ArrowDown") {
-    dropPiece();
-  }
-
-  if (event.key === "ArrowUp") {
-    rotatePiece();
-  }
-
-  if (event.key === "Escape") {
-    togglePause();
-  }
-
-  if (event.key.toLowerCase() === "r") {
-    restartGame();
-  }
+  if (event.key === "ArrowLeft") movePiece(-1);
+  if (event.key === "ArrowRight") movePiece(1);
+  if (event.key === "ArrowDown") dropPiece();
+  if (event.key === "ArrowUp") rotatePiece();
+  if (event.key === "Escape") togglePause();
+  if (event.key.toLowerCase() === "r") restartGame();
 });
 
 pauseBtn.addEventListener("click", togglePause);
 restartBtn.addEventListener("click", restartGame);
-soundBtn.addEventListener("click", () => {
-
-  musicOn = !musicOn;
-
-  if (musicOn) {
-    music.play();
-    soundBtn.textContent = "Musik AUS";
-  } else {
-    music.pause();
-    soundBtn.textContent = "Musik AN";
-  }
-
-});
 
 restartGame();
 gameLoop();
