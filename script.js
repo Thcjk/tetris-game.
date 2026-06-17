@@ -53,7 +53,6 @@ const highscoreEl = document.getElementById("highscore");
 
 const pauseBtn = document.getElementById("pauseBtn");
 const restartBtn = document.getElementById("restartBtn");
-const soundBtn = document.getElementById("soundBtn");
 
 const COLS = 10;
 const ROWS = 20;
