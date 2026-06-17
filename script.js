@@ -24,9 +24,9 @@ music.loop = true;
 music.volume = 0.12;
 
 moveSound.volume = 1.0;
-rotateSound.volume = 1.0;
+rotateSound.volume = 0.8;
 lineSound.volume = 1.0;
-gameOverSound.volume = 1.0;
+gameOverSound.volume = 2.0;
 
 let soundOn = false;
 
