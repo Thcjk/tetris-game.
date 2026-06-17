@@ -13,6 +13,17 @@ const pauseBtn = document.getElementById("pauseBtn");
 const restartBtn = document.getElementById("restartBtn");
 const soundBtn = document.getElementById("soundBtn");
 
+const playerNameInput = document.getElementById("playerName");
+const saveScoreBtn = document.getElementById("saveScoreBtn");
+const leaderboardEl = document.getElementById("leaderboard");
+
+// Supabase
+const SUPABASE_URL = "https://gnphrpmdktqbqhtzcedp.supabase.co";
+const SUPABASE_KEY = "sb_publishable_tUv6KqshnLy-3KNlTqo0Ew_wY1j-YJ0";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let scoreSaved = false;
+
 // Sounds
 const music = new Audio("music.mp3");
 const moveSound = new Audio("move.wav");
@@ -26,7 +37,7 @@ music.volume = 0.12;
 moveSound.volume = 1.0;
 rotateSound.volume = 0.8;
 lineSound.volume = 1.0;
-gameOverSound.volume = 2.0;
+gameOverSound.volume = 1.0;
 
 let soundOn = false;
 
@@ -51,8 +62,6 @@ soundBtn.addEventListener("click", () => {
     });
 
     soundBtn.textContent = "Sound AUS";
-
-    // Testton, damit du sofort hörst, ob Effekte funktionieren
     playSound(moveSound);
   } else {
     music.pause();
@@ -317,6 +326,7 @@ function spawnPiece() {
     playSound(gameOverSound);
     music.pause();
     saveHighscore();
+    saveScoreBtn.disabled = false;
   }
 }
 
@@ -336,6 +346,68 @@ function saveHighscore() {
   updateUI();
 }
 
+async function saveScoreOnline() {
+  if (scoreSaved) {
+    alert("Dieser Score wurde schon gespeichert.");
+    return;
+  }
+
+  const name = playerNameInput.value.trim();
+
+  if (!name) {
+    alert("Bitte gib deinen Namen ein.");
+    return;
+  }
+
+  if (score <= 0) {
+    alert("Du brauchst zuerst Punkte.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("scores")
+    .insert([
+      {
+        name: name,
+        score: score,
+        level: level,
+        lines: lines
+      }
+    ]);
+
+  if (error) {
+    console.log("Supabase Fehler:", error);
+    alert("Score konnte nicht gespeichert werden.");
+    return;
+  }
+
+  scoreSaved = true;
+  saveScoreBtn.disabled = true;
+  alert("Score gespeichert!");
+  loadLeaderboard();
+}
+
+async function loadLeaderboard() {
+  const { data, error } = await supabaseClient
+    .from("scores")
+    .select("name, score, level, lines")
+    .order("score", { ascending: false })
+    .limit(10);
+
+  if (error) {
+    console.log("Leaderboard Fehler:", error);
+    return;
+  }
+
+  leaderboardEl.innerHTML = "";
+
+  data.forEach((entry, index) => {
+    const li = document.createElement("li");
+    li.textContent = `${index + 1}. ${entry.name}: ${entry.score} Punkte | Level ${entry.level}`;
+    leaderboardEl.appendChild(li);
+  });
+}
+
 function togglePause() {
   if (gameOver) return;
 
@@ -352,7 +424,9 @@ function restartGame() {
   dropCounter = 0;
   gameOver = false;
   paused = false;
+  scoreSaved = false;
 
+  saveScoreBtn.disabled = false;
   pauseBtn.textContent = "Pause";
 
   if (soundOn) {
@@ -417,6 +491,8 @@ document.addEventListener("keydown", (event) => {
 
 pauseBtn.addEventListener("click", togglePause);
 restartBtn.addEventListener("click", restartGame);
+saveScoreBtn.addEventListener("click", saveScoreOnline);
 
 restartGame();
+loadLeaderboard();
 gameLoop();
