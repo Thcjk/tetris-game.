@@ -21,10 +21,10 @@ const lineSound = new Audio("line.wav");
 const gameOverSound = new Audio("gameover.wav");
 
 music.loop = true;
-music.volume = 0.4;
+music.volume = 0.12;
 
-moveSound.volume = 0.8;
-rotateSound.volume = 0.9;
+moveSound.volume = 1.0;
+rotateSound.volume = 1.0;
 lineSound.volume = 1.0;
 gameOverSound.volume = 1.0;
 
@@ -33,9 +33,12 @@ let soundOn = false;
 function playSound(sound) {
   if (!soundOn) return;
 
-  const clone = sound.cloneNode();
-  clone.volume = sound.volume;
-  clone.play().catch(() => {});
+  sound.pause();
+  sound.currentTime = 0;
+
+  sound.play().catch((error) => {
+    console.log("Sound konnte nicht abgespielt werden:", error);
+  });
 }
 
 soundBtn.addEventListener("click", () => {
@@ -43,8 +46,14 @@ soundBtn.addEventListener("click", () => {
 
   if (soundOn) {
     music.currentTime = 0;
-    music.play().catch(() => {});
+    music.play().catch((error) => {
+      console.log("Musik konnte nicht gestartet werden:", error);
+    });
+
     soundBtn.textContent = "Sound AUS";
+
+    // Testton, damit du sofort hörst, ob Effekte funktionieren
+    playSound(moveSound);
   } else {
     music.pause();
     soundBtn.textContent = "Sound AN";
@@ -223,6 +232,7 @@ function rotateMatrix(matrix) {
 
   for (let y = 0; y < size; y++) {
     rotated[y] = [];
+
     for (let x = 0; x < size; x++) {
       rotated[y][x] = matrix[size - 1 - x][y];
     }
