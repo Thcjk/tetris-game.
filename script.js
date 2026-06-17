@@ -16,7 +16,7 @@ const soundBtn = document.getElementById("soundBtn");
 // Sounds
 const music = new Audio("music.mp3");
 const moveSound = new Audio("move.wav");
-const rotateSound = new Audio("rotate.new-wav");
+const rotateSound = new Audio("rotate-new.wav");
 const lineSound = new Audio("line.wav");
 const gameOverSound = new Audio("gameover.wav");
 
