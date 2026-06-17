@@ -423,7 +423,10 @@ async function loadLeaderboard() {
 }
 
 function togglePause() {
-  if (gameOver) return;
+  if (gameOver) {
+    restartGame();
+    return;
+  }
 
   paused = !paused;
   pauseBtn.textContent = paused ? "Fortsetzen" : "Pause";
@@ -474,7 +477,7 @@ function draw() {
   }
 
   if (gameOver) {
-    drawOverlay("GAME OVER");
+  drawOverlay("GAME OVER - R drücken");
   }
 }
 
@@ -500,7 +503,7 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "ArrowDown") dropPiece();
   if (event.key === "ArrowUp") rotatePiece();
   if (event.key === "Escape") togglePause();
-  if (event.key.toLowerCase() === "r") restartGame();
+  if (event.key.toLowerCase() === "r" && gameOver) restartGame();
 });
 
 pauseBtn.addEventListener("click", togglePause);
