@@ -28,9 +28,6 @@
       <input id="playerName" placeholder="Dein Name" maxlength="15">
       <button id="saveScoreBtn">Score speichern</button>
 
-      <h2>Top 10</h2>
-      <ol id="leaderboard"></ol>
-
       <small>
         ← → bewegen<br>
         ↓ schneller<br>
@@ -42,6 +39,22 @@
 
     <canvas id="game" width="300" height="600"></canvas>
   </main>
+  <div class="leaderboard-box">
+  <h2>🏆 Top 10 Rangliste</h2>
+
+  <table id="leaderboardTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Punkte</th>
+        <th>Level</th>
+      </tr>
+    </thead>
+
+    <tbody id="leaderboard"></tbody>
+  </table>
+</div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
 </body>
