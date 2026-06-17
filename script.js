@@ -384,6 +384,10 @@ async function saveScoreOnline() {
   scoreSaved = true;
   saveScoreBtn.disabled = true;
   alert("Score gespeichert!");
+
+  loadLeaderboard();
+}
+
 async function loadLeaderboard() {
   const { data, error } = await supabaseClient
     .from("scores")
