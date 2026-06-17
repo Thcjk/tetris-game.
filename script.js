@@ -384,9 +384,6 @@ async function saveScoreOnline() {
   scoreSaved = true;
   saveScoreBtn.disabled = true;
   alert("Score gespeichert!");
-  loadLeaderboard();
-}
-
 async function loadLeaderboard() {
   const { data, error } = await supabaseClient
     .from("scores")
@@ -402,9 +399,22 @@ async function loadLeaderboard() {
   leaderboardEl.innerHTML = "";
 
   data.forEach((entry, index) => {
-    const li = document.createElement("li");
-    li.textContent = `${index + 1}. ${entry.name}: ${entry.score} Punkte | Level ${entry.level}`;
-    leaderboardEl.appendChild(li);
+    const row = document.createElement("tr");
+
+    let place = index + 1;
+
+    if (index === 0) place = "🥇";
+    if (index === 1) place = "🥈";
+    if (index === 2) place = "🥉";
+
+    row.innerHTML = `
+      <td>${place}</td>
+      <td>${entry.name}</td>
+      <td>${entry.score}</td>
+      <td>${entry.level}</td>
+    `;
+
+    leaderboardEl.appendChild(row);
   });
 }
 
