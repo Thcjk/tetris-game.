@@ -21,26 +21,28 @@ const lineSound = new Audio("line.wav");
 const gameOverSound = new Audio("gameover.wav");
 
 music.loop = true;
-music.volume = 0.25;
+music.volume = 0.08;
 
-moveSound.volume = 0.25;
-rotateSound.volume = 0.4;
-lineSound.volume = 0.6;
-gameOverSound.volume = 0.7;
+moveSound.volume = 0.8;
+rotateSound.volume = 0.9;
+lineSound.volume = 1.0;
+gameOverSound.volume = 1.0;
 
 let soundOn = false;
 
 function playSound(sound) {
   if (!soundOn) return;
 
-  sound.currentTime = 0;
-  sound.play().catch(() => {});
+  const clone = sound.cloneNode();
+  clone.volume = sound.volume;
+  clone.play().catch(() => {});
 }
 
 soundBtn.addEventListener("click", () => {
   soundOn = !soundOn;
 
   if (soundOn) {
+    music.currentTime = 0;
     music.play().catch(() => {});
     soundBtn.textContent = "Sound AUS";
   } else {
