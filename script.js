@@ -15,10 +15,10 @@ const soundBtn = document.getElementById("soundBtn");
 
 // Sounds
 const music = new Audio("music.mp3");
-const moveSound = new Audio("move.mp3");
-const rotateSound = new Audio("rotate.mp3");
-const lineSound = new Audio("line.mp3");
-const gameOverSound = new Audio("gameover.mp3");
+const moveSound = new Audio("move.wav");
+const rotateSound = new Audio("rotate.wav");
+const lineSound = new Audio("line.wav");
+const gameOverSound = new Audio("gameover.wav");
 
 music.loop = true;
 music.volume = 0.25;
