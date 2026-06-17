@@ -458,14 +458,20 @@ function restartGame() {
   drawNextPiece();
 }
 
-function drawOverlay(text) {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-  ctx.fillRect(0, canvas.height / 2 - 60, canvas.width, 120);
+function drawOverlay(title, subtitle = "") {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+  ctx.fillRect(0, canvas.height / 2 - 70, canvas.width, 140);
 
   ctx.fillStyle = "white";
-  ctx.font = "24px Arial";
   ctx.textAlign = "center";
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 12);
+
+  ctx.font = "28px Arial";
+  ctx.fillText(title, canvas.width / 2, canvas.height / 2 - 10);
+
+  if (subtitle) {
+    ctx.font = "16px Arial";
+    ctx.fillText(subtitle, canvas.width / 2, canvas.height / 2 + 30);
+  }
 }
 
 function draw() {
@@ -477,9 +483,8 @@ function draw() {
   }
 
   if (gameOver) {
-  drawOverlay("GAME OVER - R drücken");
+    drawOverlay("GAME OVER", "R drücken für Neustart");
   }
-  
 }
 
 function gameLoop(time = 0) {
