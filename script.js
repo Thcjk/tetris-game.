@@ -463,7 +463,7 @@ function drawOverlay(text) {
   ctx.fillRect(0, canvas.height / 2 - 60, canvas.width, 120);
 
   ctx.fillStyle = "white";
-  ctx.font = "34px Arial";
+  ctx.font = "24px Arial";
   ctx.textAlign = "center";
   ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 12);
 }
@@ -477,17 +477,9 @@ function draw() {
   }
 
   if (gameOver) {
-  drawOverlay("GAME OVER");
-  
-  ctx.fillStyle = "white";
-  ctx.font = "18px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText(
-    "R drücken für Neustart",
-    canvas.width / 2,
-    canvas.height / 2 + 45
-  );
+  drawOverlay("GAME OVER - R drücken");
   }
+  
 }
 
 function gameLoop(time = 0) {
