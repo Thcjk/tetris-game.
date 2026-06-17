@@ -21,7 +21,7 @@ const lineSound = new Audio("line.wav");
 const gameOverSound = new Audio("gameover.wav");
 
 music.loop = true;
-music.volume = 0.0;
+music.volume = 0.4;
 
 moveSound.volume = 0.8;
 rotateSound.volume = 0.9;
